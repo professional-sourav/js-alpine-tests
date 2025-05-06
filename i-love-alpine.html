@@ -15,7 +15,7 @@
             <span x-text="person.name + ' is ' + person.age + ' years old'"></span>
         </div> -->
 
-        <div x-data="posts" x-init="loadPosts()">
+        <div x-data="posts">
             <button x-on:click="handleDisplayPosts(posts)">Display Post</button>
             <ul>
                 <template x-for="post in posts" :key="post.id">
@@ -61,7 +61,13 @@
             }
 
             const handleDisplayPosts = (posts) => {
-                console.log(posts);                
+                posts()
+                    .then(data => {
+                        posts = data
+                    })
+                    .catch(error => {
+                        console.error('Error fetching posts:', error);
+                    });
             }
 
             const loadPosts = async () => {
@@ -81,10 +87,9 @@
             //     });
 
             return {
-                posts: [],
+                posts: loadPosts,
                 handleAddPost,
-                handleDisplayPosts,
-                loadPosts
+                handleDisplayPosts
             }
         }
 
